@@ -9,6 +9,7 @@ from pandas.tseries.offsets import BDay
 
 def last_business_day(days = 1):
     """Return the date for the last business day"""
+
     today = pandas.datetime.today()
     today = str(today - BDay(days)).split(" ")[0].split("-")
     today = datetime(int(today[0]), int(today[1]), int(today[2]))
@@ -17,6 +18,7 @@ def last_business_day(days = 1):
 
 def load_data(ticker):
     """Return data for the given ticker symbol"""
+
     client = TiingoClient()
     data = client.get_ticker_price(ticker, startDate=last_business_day(250), endDate=last_business_day())
 
@@ -51,6 +53,7 @@ def load_data(ticker):
     return pandas.DataFrame(result, columns=column_list)
 
 if __name__ == "__main__":
+    
     ap = ArgumentParser()
     ap.add_argument('-f', '--output-file', help="The CSV file to output to", required=True)
     ap.add_argument('-t', '--ticker-symbol', help="The ticker to load data for", required=True)

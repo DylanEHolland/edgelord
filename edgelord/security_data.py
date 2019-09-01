@@ -5,16 +5,22 @@ class security_data:
     columns_allowed = None
     data = None
 
+    # Magic subroutines
+    #
     def __init__(self):
         self.columns_allowed = ['close', 'high', 'low', 'open', 'volume']
 
     def __str__(self):
-        return str(self.dataframe())
+        return str(self.frame())
 
-    def dataframe(self):
+    # Getter Subroutines
+    #
+    def frame(self):
         """Return data as dataframe"""
         return pandas.DataFrame(self.data, columns = self.columns)
 
+    # Operation subroutines
+    #
     def from_csv(self, file):
         """Build a security_data object from the given CSV file"""
         
@@ -26,5 +32,4 @@ class security_data:
             self.data.append(row)
 
         self.columns = data.columns
-
         return self
