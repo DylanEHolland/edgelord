@@ -1,4 +1,8 @@
-def last_business_day(days = 1):
+from . import security_data
+
+data = security_data.security_data
+
+def previous_business_day(days = 1):
     """Return the date for the last business day"""
     today = pandas.datetime.today()
     today = str(today - BDay(days)).split(" ")[0]
