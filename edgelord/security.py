@@ -1,8 +1,15 @@
 from . import security_data
+from . import benchmark as bm
 
 class security:
     data = None
     risk_free_rate = 0.02
+
+    #   Compare against another equity
+    #
+    def benchmark(self, foreign_symbol):
+        """Return a benchmark class with this security and the benchmark"""
+        return bm.benchmark(self, foreign_symbol)
 
     # Statistics
     #
@@ -18,7 +25,7 @@ class security:
 
         data = self.load_data(days, price_type)
         
-        # new - old / old = percent growth
+        # (new - old) / old = percent growth
         return (data.iloc[-1] - data.iloc[0]) / data.iloc[0]
 
     #
