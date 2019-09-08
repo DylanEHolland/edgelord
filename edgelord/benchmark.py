@@ -14,7 +14,18 @@ class benchmark:
 
     #
     #
+    def alpha(self, days = None, price_type = 'close'):
+        rf = self.security.risk_free_rate
+        security, guage = self.load_data(days, price_type)
+        sg = (guage.iloc[-1] - guage.iloc[0]) / guage.iloc[0]
+        mg = (security.iloc[-1] - security.iloc[0]) / security.iloc[0] 
+
+        return ( (sg - rf) / (mg - rf) ) * self.beta(days, price_type)
+
+    #
+    #
     def beta(self, days = None, price_type = 'close'):
+        """Return the assets beta in comparison to the guage"""
         data, guage = self.load_data(days, price_type)
         volatility = (data.std() / guage.std())
         result = self.correlation(days, price_type) * volatility

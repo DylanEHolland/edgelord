@@ -1,0 +1,2 @@
+Generated test data with the following (from top level directory):
+`for ticker in AMD SPY MSFT; do echo python ./scripts/gendata.py -t $ticker -f ./tests/test_data/\`echo $ticker|awk '{print tolower($0)}'\`.csv; done;`

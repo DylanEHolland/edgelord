@@ -20,7 +20,7 @@ def load_data(ticker):
     """Return data for the given ticker symbol"""
 
     client = TiingoClient()
-    data = client.get_ticker_price(ticker, startDate=last_business_day(253), endDate=last_business_day())
+    data = client.get_ticker_price(ticker, startDate=last_business_day(300), endDate=last_business_day())
 
     result = []
 
@@ -51,9 +51,9 @@ def load_data(ticker):
         result.append(buffer)
 
     return pandas.DataFrame(result, columns=column_list)
-
+    
 if __name__ == "__main__":
-
+    
     ap = ArgumentParser()
     ap.add_argument('-f', '--output-file', help="The CSV file to output to", required=True)
     ap.add_argument('-t', '--ticker-symbol', help="The ticker to load data for", required=True)
