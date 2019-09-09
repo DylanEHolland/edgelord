@@ -30,6 +30,18 @@ class security:
 
     #
     #
+    def price(self, days = None, price_type = 'close'):
+        data = self.load_data(days, price_type)
+
+        if days is None:
+            data = data.tail(1).iloc[0]
+        else:
+            data = data.values.tolist()
+
+        return data
+
+    #
+    #
     def sharpe(self, days = None, price_type = 'close'):
         """Return the equities sharpe ratio"""
         
@@ -60,7 +72,7 @@ class security:
             else:
                 data = data.values.tolist()
 
-        print(data)
+        return data
 
     # Operations
     #
