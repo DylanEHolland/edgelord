@@ -1,5 +1,6 @@
-from . import security_data
+from . import base_routines as br
 from . import benchmark as bm
+from . import security_data
 
 class security:
     data = None
@@ -25,8 +26,19 @@ class security:
 
         data = self.load_data(days, price_type)
         
-        # (new - old) / old = percent growth
-        return (data.iloc[-1] - data.iloc[0]) / data.iloc[0]
+        return br.change(data.iloc[-1], data.iloc[0])
+
+    #
+    #
+    def price(self, days = None, price_type = 'close'):
+        data = self.load_data(days, price_type)
+
+        if days is None:
+            data = data.tail(1).iloc[0]
+        else:
+            data = data.values.tolist()
+
+        return data
 
     #
     #
@@ -41,10 +53,29 @@ class security:
         """Return the simple moving average"""
 
         data = self.load_data(days, price_type).mean()
-        print(data)
+        
+        return data
 
+    #
+    #
     def standard_deviation(self, days = None, price_type = 'close'):
         return self.load_data(days, price_type).std()
+
+    #
+    #
+    def volume(self, days = None, sum = False):
+        """Return the volume (or average volume) for the given amount of days"""
+        data = self.load_data(days)
+
+        if days is None:
+            data = data.tail(1).iloc[0]
+        else:
+            if sum:
+                data = data.mean()
+            else:
+                data = data.values.tolist()
+
+        return data
 
     # Operations
     #
