@@ -10,7 +10,7 @@
 
     *   Implement tests for all subroutines: __[Done.]__
 
-*   ### __Version 0.2 (CurrentlyTentativelyTitled)
+*   ### __Version 0.2 (CurrentlyTentativelyTitled)__
 
     *   Extend loading of data to json
 
