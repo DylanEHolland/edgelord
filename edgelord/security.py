@@ -46,6 +46,22 @@ class security:
     def standard_deviation(self, days = None, price_type = 'close'):
         return self.load_data(days, price_type).std()
 
+    #
+    #
+    def volume(self, days = None, sum = False):
+        """Return the volume (or average volume) for the given amount of days"""
+        data = self.load_data(days)
+
+        if days is None:
+            data = data.tail(1).iloc[0]
+        else:
+            if sum:
+                data = data.mean()
+            else:
+                data = data.values.tolist()
+
+        print(data)
+
     # Operations
     #
     def from_csv(self, file):
