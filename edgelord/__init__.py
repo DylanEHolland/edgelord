@@ -8,8 +8,6 @@ data = security_data.security_data
 security = security.security
 
 def from_csv(file):
-    
-
     return security().from_csv(file)
 
 def previous_business_day(days = 1):

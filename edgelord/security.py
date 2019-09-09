@@ -1,5 +1,6 @@
 from . import base_routines as br
 from . import benchmark as bm
+from . import indicators as ind
 from . import security_data
 
 class security:
@@ -19,6 +20,13 @@ class security:
 
         return self.load_data(days, price_type).pct_change()
 
+    #
+    #
+    def ema(self, days = None):
+        """Return emas for the number of days"""
+        
+        return NotImplementedError
+
     # 
     #
     def growth(self, days = None, price_type = 'close'):
@@ -27,6 +35,11 @@ class security:
         data = self.load_data(days, price_type)
         
         return br.change(data.iloc[-1], data.iloc[0])
+
+    #
+    #
+    def indicators(self):
+        return ind.indicators(self.data)
 
     #
     #
@@ -59,6 +72,8 @@ class security:
     #
     #
     def standard_deviation(self, days = None, price_type = 'close'):
+        """Return standard deviation (of given price type) for the given amount of days"""
+
         return self.load_data(days, price_type).std()
 
     #
