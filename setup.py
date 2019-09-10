@@ -11,4 +11,7 @@ setup(
     download_url = 'https://github.com/edgyquant/edgelord/archive/0.1.tar.gz',
     keywords = ['stock', 'equity', 'analysis'],
     classifiers = [],
+    install_requires=[
+        'pandas'
+    ]
 )

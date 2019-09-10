@@ -22,10 +22,14 @@ class security:
 
     #
     #
-    def ema(self, days = None):
+    def exponential_moving_average(self, days = None, price_type = 'close'):
         """Return emas for the number of days"""
         
-        return NotImplementedError
+        data = self.load_data(days, price_type)
+        if days is not None:
+            data = data.tail(days)
+
+        return data.ewm(span=20).mean()
 
     # 
     #
