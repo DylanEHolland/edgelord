@@ -16,6 +16,8 @@ class benchmark:
     #
     #
     def alpha(self, days = None, price_type = 'close'):
+        """Return the assets alpha in comparison to the guage"""
+
         rf = self.security.risk_free_rate
         security, guage = self.load_data(days, price_type)
         sg = (guage.iloc[-1] - guage.iloc[0]) / guage.iloc[0]
