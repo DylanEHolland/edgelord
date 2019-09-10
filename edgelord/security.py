@@ -24,7 +24,7 @@ class security:
     #
     def exponential_moving_average(self, days = None, price_type = 'close'):
         """Return emas for the number of days"""
-        
+
         data = self.load_data(days, price_type)
         if days is not None:
             data = data.tail(days)
@@ -43,7 +43,7 @@ class security:
     #
     #
     def indicators(self):
-        return ind.indicators(self.data)
+        return ind.indicators(self)
 
     #
     #
