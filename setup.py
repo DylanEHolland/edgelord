@@ -12,6 +12,7 @@ setup(
     keywords = ['stock', 'equity', 'analysis'],
     classifiers = [],
     install_requires=[
-        'pandas'
+        'pandas',
+        'scipy'
     ]
 )

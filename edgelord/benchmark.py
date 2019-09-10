@@ -1,4 +1,5 @@
 import numpy as np
+import scipy.stats
 from . import security as sc
 
 class benchmark:
@@ -49,3 +50,14 @@ class benchmark:
             days = len(self.security.data.frame().index)
         
         return self.security.data.frame()[price_type].tail(days), self.guage.data.frame()[price_type].tail(days)
+
+    #
+    #
+    def r_squared(self, days = None, price_type = 'close'):
+        """Return the squared r value for the two securities"""
+
+        sec = self.security.data.frame()[price_type].values.tolist()
+        bm = self.guage.data.frame()[price_type].values.tolist()
+        slope, intercept, r_value, p_value, std_err = scipy.stats.linregress(sec, bm)
+        
+        return r_value**2
