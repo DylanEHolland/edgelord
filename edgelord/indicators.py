@@ -42,3 +42,20 @@ class indicators:
                     drawdown = 0
 
         return largest
+
+    def rsi(self, days = None):
+        data = self.security.load_data(days=days)
+        dx = data.diff()
+        
+        up,down = dx.copy(), dx.copy()
+        up[up < 0] = 0
+        down[down > 0] = 0
+
+        up = up.rolling(window=12).mean()
+        down = down.rolling(window=12).mean().abs()
+        
+        print(up / down)
+        #up = data.rolling_mean()
+        #print(up)
+        #print(data)
+        exit(-1)

@@ -106,13 +106,17 @@ class security:
 
     #
     #
-    def load_data(self, days = None, price_type = 'close'):
+    def load_data(self, days = None, price_type = 'close', all = False):
         """Load data for the time period"""
 
         if days is None:
             days = len(self.data.frame().index)
         
-        return self.data.frame()[price_type].tail(days)
+        data = self.data.frame()
+        if not all:
+            data = data[price_type]
+
+        return data.tail(days)
 
     #
     #
