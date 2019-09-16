@@ -22,4 +22,6 @@
 
     *   Rewrite all tests to be like `tests/test_data_from_csv.py` instead of the lazy tests we have now
 
+__Further down the line__
 
+*   A Value at Risk modeler for a given equity (or portfolio of equities)

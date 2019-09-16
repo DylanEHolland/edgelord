@@ -34,7 +34,7 @@ def load_data(ticker):
 
         for column in row:
             # Loop through each rows column list
-            if "adj" in column:
+            if ("adj" in column) or (column == 'date'):
                 # Only grab adjusted data (to account for any splits)
 
                 column_name = column.replace("adj", "").lower()
@@ -42,7 +42,10 @@ def load_data(ticker):
                 if not set_columns:
                     column_list.append(column.replace("adj", "").lower())
 
-                buffer[column_name] = row[column]
+                if column == 'date':
+                    buffer[column_name] = row[column].split("T")[0]
+                else:
+                    buffer[column_name] = row[column]
 
         if not set_columns and column_list is not None:
             # Only set the column list once
@@ -55,8 +58,16 @@ def load_data(ticker):
 if __name__ == "__main__":
     
     ap = ArgumentParser()
-    ap.add_argument('-f', '--output-file', help="The CSV file to output to", required=True)
+    ap.add_argument('-f', '--output-file', help="The file to output to")
+    ap.add_argument('-js', '--to-json', help="Use json instead of CSV", action='store_true')
     ap.add_argument('-t', '--ticker-symbol', help="The ticker to load data for", required=True)
     ap = ap.parse_args()
 
-    load_data(ap.ticker_symbol).to_csv(ap.output_file)
+    data = load_data(ap.ticker_symbol)
+    if ap.output_file:
+        if not ap.to_json:
+            data.to_csv(ap.output_file)
+        else:
+            data.to_json(ap.output_file)
+    else:
+        print(data)

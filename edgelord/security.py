@@ -1,5 +1,6 @@
 from . import base_routines as br
 from . import benchmark as bm
+from . import indicators as ind
 from . import security_data
 
 class security:
@@ -19,6 +20,17 @@ class security:
 
         return self.load_data(days, price_type).pct_change()
 
+    #
+    #
+    def exponential_moving_average(self, days = None, price_type = 'close'):
+        """Return emas for the number of days"""
+
+        data = self.load_data(days, price_type)
+        if days is not None:
+            data = data.tail(days)
+
+        return data.ewm(span=20).mean()
+
     # 
     #
     def growth(self, days = None, price_type = 'close'):
@@ -27,6 +39,11 @@ class security:
         data = self.load_data(days, price_type)
         
         return br.change(data.iloc[-1], data.iloc[0])
+
+    #
+    #
+    def indicators(self):
+        return ind.indicators(self)
 
     #
     #
@@ -59,6 +76,8 @@ class security:
     #
     #
     def standard_deviation(self, days = None, price_type = 'close'):
+        """Return standard deviation (of given price type) for the given amount of days"""
+
         return self.load_data(days, price_type).std()
 
     #
@@ -85,15 +104,25 @@ class security:
         self.data = security_data.security_data().from_csv(file)
         return self
 
+    def from_json(self, file):
+        """Build a security object from a CSV file"""
+
+        self.data = security_data.security_data().from_json(file)
+        return self
+
     #
     #
-    def load_data(self, days = None, price_type = 'close'):
+    def load_data(self, days = None, price_type = 'close', all = False):
         """Load data for the time period"""
 
         if days is None:
             days = len(self.data.frame().index)
         
-        return self.data.frame()[price_type].tail(days)
+        data = self.data.frame()
+        if not all:
+            data = data[price_type]
+
+        return data.tail(days)
 
     #
     #

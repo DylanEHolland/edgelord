@@ -1,4 +1,5 @@
 import numpy as np
+import scipy.stats
 from . import security as sc
 
 class benchmark:
@@ -15,6 +16,8 @@ class benchmark:
     #
     #
     def alpha(self, days = None, price_type = 'close'):
+        """Return the assets alpha in comparison to the guage"""
+
         rf = self.security.risk_free_rate
         security, guage = self.load_data(days, price_type)
         sg = (guage.iloc[-1] - guage.iloc[0]) / guage.iloc[0]
@@ -49,3 +52,14 @@ class benchmark:
             days = len(self.security.data.frame().index)
         
         return self.security.data.frame()[price_type].tail(days), self.guage.data.frame()[price_type].tail(days)
+
+    #
+    #
+    def r_squared(self, days = None, price_type = 'close'):
+        """Return the squared r value for the two securities"""
+
+        sec = self.security.data.frame()[price_type].values.tolist()
+        bm = self.guage.data.frame()[price_type].values.tolist()
+        slope, intercept, r_value, p_value, std_err = scipy.stats.linregress(sec, bm)
+        
+        return r_value**2
