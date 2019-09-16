@@ -104,6 +104,12 @@ class security:
         self.data = security_data.security_data().from_csv(file)
         return self
 
+    def from_json(self, file):
+        """Build a security object from a CSV file"""
+
+        self.data = security_data.security_data().from_json(file)
+        return self
+
     #
     #
     def load_data(self, days = None, price_type = 'close', all = False):

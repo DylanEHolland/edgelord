@@ -2,7 +2,8 @@ import edgelord
 
 exit_code = 2
 
-security = edgelord.from_csv("tests/test_data/amd.csv")
+security = edgelord.from_json("tests/test_data/amd.json")
+print(security.data.frame())
 if len(security.data.frame().values) == 289:
     exit_code -= 1
 

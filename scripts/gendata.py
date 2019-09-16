@@ -58,12 +58,16 @@ def load_data(ticker):
 if __name__ == "__main__":
     
     ap = ArgumentParser()
-    ap.add_argument('-f', '--output-file', help="The CSV file to output to")
+    ap.add_argument('-f', '--output-file', help="The file to output to")
+    ap.add_argument('-js', '--to-json', help="Use json instead of CSV", action='store_true')
     ap.add_argument('-t', '--ticker-symbol', help="The ticker to load data for", required=True)
     ap = ap.parse_args()
 
     data = load_data(ap.ticker_symbol)
     if ap.output_file:
-        data.to_csv(ap.output_file)
+        if not ap.to_json:
+            data.to_csv(ap.output_file)
+        else:
+            data.to_json(ap.output_file)
     else:
         print(data)
