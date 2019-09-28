@@ -12,15 +12,21 @@
 
 *   ### __Version 0.2 (CurrentlyTentativelyTitled)__
 
-    *   Extend loading of data to json
+    *   Extend loading of data to json: __[Done.]__
 
-    *   Extend basic signals to include ema and largest drawdown
+    *   Extend basic signals to include ema and largest drawdown: __[Done.]__
 
-    *   Implement a base technical indicators
+    *   Implement a base technical indicators: __[Done.]__
 
-        1.  Number of dips in a period of time (by percent given)
+        1.  Number of dips in a period of time (by percent given): __[Done.]__
+
+    *   Implement downloading of information (via tiingo initially)
+
+*   ### __Version 0.3
 
     *   Rewrite all tests to be like `tests/test_data_from_csv.py` instead of the lazy tests we have now
+
+    *   Extend `security_data.download()` to include a free-tier module as well
 
 __Further down the line__
 
