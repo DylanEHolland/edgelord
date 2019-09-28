@@ -13,6 +13,10 @@ def from_csv(file):
 def from_json(file):
     return security().from_json(file)
 
+def from_rest(ticker):
+    return security().from_rest(ticker)
+
+
 def previous_business_day(days = 1):
     """Return the date for the last business day"""
 

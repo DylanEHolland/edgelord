@@ -10,7 +10,7 @@
 
     *   Implement tests for all subroutines: __[Done.]__
 
-*   ### __Version 0.2 (CurrentlyTentativelyTitled)__
+*   ### __Version 0.2 (DownloadableDataDemon)__
 
     *   Extend loading of data to json: __[Done.]__
 
@@ -22,7 +22,7 @@
 
     *   Implement downloading of information (via tiingo initially)
 
-*   ### __Version 0.3
+*   ### __Version 0.3 (CurrentlyTentativelyTitled)__
 
     *   Rewrite all tests to be like `tests/test_data_from_csv.py` instead of the lazy tests we have now
 

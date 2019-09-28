@@ -110,6 +110,12 @@ class security:
         self.data = security_data.security_data().from_json(file)
         return self
 
+    def from_rest(self, ticker):
+        """Build a security object from a CSV file"""
+
+        self.data = security_data.security_data().from_rest(ticker)
+        return self
+
     #
     #
     def load_data(self, days = None, price_type = 'close', all = False):
