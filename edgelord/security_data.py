@@ -2,6 +2,8 @@ from datetime import datetime
 import pandas
 from pandas.tseries.offsets import BDay
 from tiingo import TiingoClient
+import time
+import os
 
 def last_business_day(days = 1):
     """Return the date for the last business day"""
@@ -14,13 +16,41 @@ def last_business_day(days = 1):
 
 class security_data:
     """Time series data"""
+    cache_directory = None
     columns_allowed = None
     data = None
+    parent = None
 
     # Magic subroutines
     #
-    def __init__(self):
+    def __init__(self, parent, caching = False):
+        self.caching = caching
         self.columns_allowed = ['close', 'high', 'low', 'open', 'volume']
+        self.parent = parent
+
+        # Check caching
+        if self.caching and 'EDGELORD_CACHE_DIR' in os.environ:
+            self.cache_directory = str(os.environ['EDGELORD_CACHE_DIR']).replace("~", os.environ['HOME'])
+            if os.path.exists(self.cache_directory):
+
+                days_before_renew = 2
+                if 'EDGELORD_CACHE_DAYS' in os.environ:
+                    day_before_renew = int(os.environ['EDGELORD_CACHE_DAYS'])
+
+                seconds = time.time() - os.stat(self.cache_directory).st_mtime
+                minutes = (seconds / 60)
+                hours = (minutes / 60)
+                days = (hours / 24)
+
+                if days_before_renew >= days:
+                    os.rmdir(self.cache_directory)
+
+            #if not os.path.exists(self.cache_directory):
+            #    os.mkdir(self.cache_directory)
+
+    def __del__(self):
+        if self.caching and self.cache_directory is not None:
+            self.frame().to_json("%s/%s.json" % (self.cache_directory, self.parent.ticker))
 
     def __str__(self):
         return str(self.frame())
@@ -37,6 +67,7 @@ class security_data:
 
         self.columns = data.columns
         return self
+
 
     def frame(self):
         """Return data as dataframe"""
@@ -61,11 +92,12 @@ class security_data:
         data = data.sort_values(by=['date'])
         return self.build(data)
 
-    def from_rest(self, ticker):
+    def from_rest(self, ticker = None, days = 260):
         """Download data from Tiingo"""
 
         client = TiingoClient()
-        data = client.get_ticker_price(ticker, startDate=last_business_day(300), endDate=last_business_day())
+        
+        data = client.get_ticker_price(ticker, startDate=last_business_day(days), endDate=last_business_day())
 
         result = []
 
@@ -100,5 +132,6 @@ class security_data:
 
         data = pandas.DataFrame(result, columns=column_list)
         data = data.sort_values(by=['date'])
+
         return self.build(data)
         

@@ -1,3 +1,3 @@
 import edgelord
 
-print(edgelord.from_rest("AMD").data.frame())
+edgelord.from_rest(days = 262, ticker = "AMD").data.frame()
