@@ -45,6 +45,9 @@ class security_data:
                 print(days)
                 if days > 1 and days_before_renew < days:
                     os.rmdir(self.cache_directory)
+                else:
+                    print("we need to load from the cache!")
+                    exit(-1)
 
             else:
                 os.mkdir(self.cache_directory)
@@ -74,6 +77,10 @@ class security_data:
         """Return data as dataframe"""
 
         return pandas.DataFrame(self.data, columns = self.columns).sort_values(by=['date'])
+
+    def from_cache(self):
+        print("...")
+        return 1
 
     def from_csv(self, file):
         """Build a security_data object from the given CSV file"""
@@ -134,5 +141,7 @@ class security_data:
         data = pandas.DataFrame(result, columns=column_list)
         data = data.sort_values(by=['date'])
 
+        data.to_json("%s/%s.json" % (self.cache_directory, ticker))
+        exit(-1)
         return self.build(data)
         
