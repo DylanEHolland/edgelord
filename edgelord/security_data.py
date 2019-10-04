@@ -29,10 +29,9 @@ class security_data:
         self.parent = parent
 
         # Check caching
-        if self.caching and 'EDGELORD_CACHE_DIR' in os.environ:
+        if 'EDGELORD_CACHE_DIR' in os.environ:
             self.cache_directory = str(os.environ['EDGELORD_CACHE_DIR']).replace("~", os.environ['HOME'])
             if os.path.exists(self.cache_directory):
-
                 days_before_renew = 2
                 if 'EDGELORD_CACHE_DAYS' in os.environ:
                     day_before_renew = int(os.environ['EDGELORD_CACHE_DAYS'])
@@ -42,15 +41,17 @@ class security_data:
                 hours = (minutes / 60)
                 days = (hours / 24)
 
-                if days_before_renew >= days:
+                print(day_before_renew)
+                print(days)
+                if days > 1 and days_before_renew < days:
                     os.rmdir(self.cache_directory)
 
-            #if not os.path.exists(self.cache_directory):
-            #    os.mkdir(self.cache_directory)
+            else:
+                os.mkdir(self.cache_directory)
 
-    def __del__(self):
-        if self.caching and self.cache_directory is not None:
-            self.frame().to_json("%s/%s.json" % (self.cache_directory, self.parent.ticker))
+#    def __del__(self):
+#        if self.caching and self.cache_directory is not None:
+#            self.frame().to_json("%s/%s.json" % (self.cache_directory, self.parent.ticker))
 
     def __str__(self):
         return str(self.frame())
