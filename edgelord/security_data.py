@@ -41,14 +41,8 @@ class security_data:
                 hours = (minutes / 60)
                 days = (hours / 24)
 
-                print(day_before_renew)
-                print(days)
                 if days > 1 and days_before_renew < days:
                     os.rmdir(self.cache_directory)
-                else:
-                    print("we need to load from the cache!")
-                    exit(-1)
-
             else:
                 os.mkdir(self.cache_directory)
 
@@ -103,45 +97,51 @@ class security_data:
     def from_rest(self, ticker = None, days = 260):
         """Download data from Tiingo"""
 
-        client = TiingoClient()
-        
-        data = client.get_ticker_price(ticker, startDate=last_business_day(days), endDate=last_business_day())
 
-        result = []
+        self.cache_filename = "%s/%s.json" % (self.cache_directory, ticker)
+        if os.path.exists(self.cache_filename):
+            buffer = self.from_json(self.cache_filename)
+            print("Loading from cache")
+        else:
+            client = TiingoClient()
+            data = client.get_ticker_price(ticker, startDate=last_business_day(days), endDate=last_business_day())
 
-        column_list = None
-        set_columns = False
-        for row in data:
-            buffer = {}
-            
-            if column_list is None and not set_columns:
-                column_list = []
+            result = []
 
-            for column in row:
-                # Loop through each rows column list
-                if ("adj" in column) or (column == 'date'):
-                    # Only grab adjusted data (to account for any splits)
+            column_list = None
+            set_columns = False
+            for row in data:
+                buffer = {}
+                
+                if column_list is None and not set_columns:
+                    column_list = []
 
-                    column_name = column.replace("adj", "").lower()
+                for column in row:
+                    # Loop through each rows column list
+                    if ("adj" in column) or (column == 'date'):
+                        # Only grab adjusted data (to account for any splits)
 
-                    if not set_columns:
-                        column_list.append(column.replace("adj", "").lower())
+                        column_name = column.replace("adj", "").lower()
 
-                    if column == 'date':
-                        buffer[column_name] = row[column].split("T")[0]
-                    else:
-                        buffer[column_name] = row[column]
+                        if not set_columns:
+                            column_list.append(column.replace("adj", "").lower())
 
-            if not set_columns and column_list is not None:
-                # Only set the column list once
-                set_columns = True
+                        if column == 'date':
+                            buffer[column_name] = row[column].split("T")[0]
+                        else:
+                            buffer[column_name] = row[column]
 
-            result.append(buffer)
+                if not set_columns and column_list is not None:
+                    # Only set the column list once
+                    set_columns = True
 
-        data = pandas.DataFrame(result, columns=column_list)
-        data = data.sort_values(by=['date'])
+                result.append(buffer)
 
-        data.to_json("%s/%s.json" % (self.cache_directory, ticker))
-        exit(-1)
-        return self.build(data)
+            data = pandas.DataFrame(result, columns=column_list)
+            data = data.sort_values(by=['date'])
+
+            data.to_json("%s/%s.json" % (self.cache_directory, ticker))
+            buffer = self.build(data)
+
+        return buffer
         

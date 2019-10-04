@@ -10,7 +10,7 @@
 
     *   Implement tests for all subroutines: __[Done.]__
 
-*   ### __Version 0.2 (DownloadableDataDemon)__
+*   ### __Version 0.2 (DownloadableCacheableDemon)__
 
     *   Extend loading of data to json: __[Done.]__
 
@@ -20,7 +20,9 @@
 
         1.  Number of dips in a period of time (by percent given): __[Done.]__
 
-    *   Implement downloading of information (via tiingo initially)
+    *   Implement downloading of information (via tiingo initially): __[Done.]__
+
+    *   Implement caching of downloaded information (based on number of days set via environment variable): __[Done.]__
 
 *   ### __Version 0.3 (CurrentlyTentativelyTitled)__
 
