@@ -6,6 +6,7 @@ from . import security_data
 class security:
     data = None
     risk_free_rate = 0.02
+    ticker = None
 
     #   Compare against another equity
     #
@@ -101,13 +102,21 @@ class security:
     def from_csv(self, file):
         """Build a security object from a CSV file"""
 
-        self.data = security_data.security_data().from_csv(file)
+        self.data = security_data.security_data(self, False).from_csv(file)
         return self
 
     def from_json(self, file):
         """Build a security object from a CSV file"""
 
-        self.data = security_data.security_data().from_json(file)
+        self.data = security_data.security_data(self, False).from_json(file)
+        print(self.data.data[0][0])
+        return self
+
+    def from_rest(self, ticker = None, days = 262):
+        """Build a security object from a CSV file"""
+
+        self.data = security_data.security_data(self, True).from_rest(ticker, days)
+        self.ticker = ticker
         return self
 
     #
