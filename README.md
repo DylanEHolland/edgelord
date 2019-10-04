@@ -1,5 +1,7 @@
 # EdgeLord
 
+[Website](https://edgyquant.com/?edgelord) | [PyPi](https://pypi.org/project/edgelord/)
+
 ## Install
 
 *   The quick way: `pip install edgelord`
