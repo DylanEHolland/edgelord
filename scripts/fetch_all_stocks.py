@@ -1,5 +1,8 @@
-import lsequity
+import argparse
+from datetime import datetime, date
+import edgelord
 import os
+import pandas
 from tiingo import TiingoClient
 
 def client():
@@ -7,28 +10,56 @@ def client():
 
     return TiingoClient()
 
-def fetch_stocks():
+def fetch_stocks(exchange = []):
     """Return a list of all available stocks"""
     data_to_fetch = {'ticker': 'ticker', 'exchange': 'exchange', 'price_currency': 'priceCurrency', 'start_date': 'startDate', 'end_date': 'endDate'}
 
     result_list = []
+    print("Fetching list...", end=' ')
+    count = 0
     for equity in client().list_stock_tickers():
-        buffer = {}
-        for index in data_to_fetch:
-            buffer[index] = equity[data_to_fetch[index]]
+        if count == 0:
+            print("Done.")
+
+        last_date = equity['endDate'].split("-")
+        run = True
+        try:
+            last_date = datetime(year=int(last_date[0]), month=int(last_date[1]), day=int(last_date[2]))
+            if last_date < edgelord.previous_business_day(1):
+                run = False
         
-        result_list.append(buffer)
+        except ValueError:
+            run = False
+        
+        if run:
+            run = False
+            for ex in exchange:
+                if ex is not '' and len(exchange) > 0 and equity['exchange'].lower() == ex.lower():
+                    run = True
 
-    return result_list
+            if run:
+                buffer = {}
+                for index in data_to_fetch:
+                    buffer[index] = equity[data_to_fetch[index]]
+                
+                result_list.append(buffer)
 
-def update():
-    """Update stock list"""
+        count += 1
 
-    print("Updating stocks...\nFetching list...", end=' ')
-    stocks = fetch_stocks()
-    print("Done.")
+    return pandas.DataFrame(result_list)
 
-    pandas.DataFrame(stocks).to_json("%s/.stock_list.json" % (os.environ['HOME']))
+def fetch_args():
+    buffer = argparse.ArgumentParser()
+    buffer.add_argument("-e", "--exchange", help="Exchange (of list of exchanges seperated by ,)", required=False)
+    buffer.add_argument("-w", "--write", help="Write to disk", action="store_true")
+    return buffer.parse_args()
 
 if __name__ == "__main__":
-    lsequity.update()
+    arguments = fetch_args()
+    exchanges = arguments.exchange.split(",")
+
+    data = fetch_stocks(exchange=exchanges)
+    if arguments.write:
+        data.to_json("%s/.stock_list.json" % (os.environ['HOME']))
+    else:
+        print(data)
