@@ -1,6 +1,7 @@
 import argparse
 from datetime import datetime, date
 import edgelord
+from edgelord import FinancialModelingPrep as fmp
 import os
 import pandas
 from tiingo import TiingoClient
@@ -10,7 +11,21 @@ def client():
 
     return TiingoClient()
 
-def fetch_stocks(exchange = []):
+def fetch_caps(data):
+    buffer = []
+
+    for row in data:
+
+        row['market_cap'] = fmp.company_profile(row['ticker'].replace("-", "..."))['MktCap']
+        row['price'] = fmp.company_profile(row['ticker'].replace("-", "..."))['Price']
+        buffer.append(row)
+
+        count += 1
+
+    return buffer
+
+
+def fetch_stocks(exchange = [], caps = False):
     """Return a list of all available stocks"""
     data_to_fetch = {'ticker': 'ticker', 'exchange': 'exchange', 'price_currency': 'priceCurrency', 'start_date': 'startDate', 'end_date': 'endDate'}
 
@@ -46,11 +61,16 @@ def fetch_stocks(exchange = []):
 
         count += 1
 
+    if caps:
+        result_list = fetch_caps(result_list)
+
     return pandas.DataFrame(result_list)
 
 def fetch_args():
     buffer = argparse.ArgumentParser()
+    buffer.add_argument("-c", "--caps", help="Pull market caps as well", action="store_true")
     buffer.add_argument("-e", "--exchange", help="Exchange (of list of exchanges seperated by ,)", required=False)
+    buffer.add_argument("-f", "--filename", help="Filename to write to", required=False)
     buffer.add_argument("-w", "--write", help="Write to disk", action="store_true")
     return buffer.parse_args()
 
@@ -58,8 +78,12 @@ if __name__ == "__main__":
     arguments = fetch_args()
     exchanges = arguments.exchange.split(",")
 
-    data = fetch_stocks(exchange=exchanges)
+    data = fetch_stocks(exchange = exchanges, caps = arguments.caps)
     if arguments.write:
-        data.to_json("%s/.stock_list.json" % (os.environ['HOME']))
+        filename = "%s/.stock_list.json" % (os.environ['HOME'])
+        if arguments.filename:
+            filename = arguments.filename
+
+        data.to_json(filename, orient='split')
     else:
         print(data)
