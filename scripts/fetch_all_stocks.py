@@ -11,14 +11,29 @@ def client():
 
     return TiingoClient()
 
-def fetch_caps(data):
+def fetch_profile(data):
+    """Append price and market cap to data rows"""
+
     buffer = []
+    count = 0
+    total = len(data)
 
     for row in data:
 
-        row['market_cap'] = fmp.company_profile(row['ticker'].replace("-", "..."))['MktCap']
-        row['price'] = fmp.company_profile(row['ticker'].replace("-", "..."))['Price']
-        buffer.append(row)
+        print(
+            "%s%%" % (
+                str( round( (count/total) * 100, 2 ) )
+            )
+        )
+
+        try:
+            tmp_data = fmp.company_profile(row['ticker'].replace("-", "."))
+            row['market_cap'] = tmp_data['MktCap']
+            row['price'] = tmp_data['Price']
+            
+            buffer.append(row)
+        except KeyError:
+            print("sigh")
 
         count += 1
 
@@ -62,7 +77,7 @@ def fetch_stocks(exchange = [], caps = False):
         count += 1
 
     if caps:
-        result_list = fetch_caps(result_list)
+        result_list = fetch_profile(result_list)
 
     return pandas.DataFrame(result_list)
 

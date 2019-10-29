@@ -40,8 +40,15 @@ class benchmark:
     def correlation(self, days = None, price_type = 'close'):
         """Return the correlation coeffecient between the two price arrays"""
         data, guage = self.load_data(days, price_type)
+
+        if not len(data.index) == len(guage.index):
+            
+            if len(data.index) > len(guage.index):
+                data = data.tail(len(guage.index)).reset_index()
+            else:
+                guage = guage.tail(len(data.index)).reset_index()
         
-        return np.corrcoef(guage.values.tolist(), data.values.tolist())[0][1]
+        return np.corrcoef(guage.values.tolist(), data.close.values.tolist())[0][1]
 
     #
     #
