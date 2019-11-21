@@ -105,10 +105,10 @@ class security:
         self.data = security_data.security_data(self, False).from_csv(file)
         return self
 
-    def from_json(self, file):
+    def from_json(self, file, use_pandas = True):
         """Build a security object from a CSV file"""
 
-        self.data = security_data.security_data(self, False).from_json(file)
+        self.data = security_data.security_data(self, False).from_json(file, use_pandas=use_pandas)
         print(self.data.data[0][0])
         return self
 

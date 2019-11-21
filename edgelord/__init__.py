@@ -10,8 +10,8 @@ security = security.security
 def from_csv(file):
     return security().from_csv(file)
 
-def from_json(file):
-    return security().from_json(file)
+def from_json(file, use_pandas = True):
+    return security().from_json(file, use_pandas = use_pandas)
 
 def from_rest(ticker = None, days = 262):
     return security().from_rest(ticker, days)

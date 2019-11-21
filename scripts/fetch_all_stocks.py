@@ -52,20 +52,30 @@ def fetch_stocks(exchange = [], caps = False):
             print("Done.")
 
         last_date = equity['endDate'].split("-")
+        start_date = equity['startDate'].split("-")
         run = True
+        
         try:
             last_date = datetime(year=int(last_date[0]), month=int(last_date[1]), day=int(last_date[2]))
+            start_date = datetime(year=int(start_date[0]), month=int(start_date[1]), day=int(start_date[2]))
             if last_date < edgelord.previous_business_day(1):
                 run = False
-        
+
+            if start_date.year < 2010:
+                run = False
+
         except ValueError:
             run = False
         
         if run:
             run = False
-            for ex in exchange:
-                if ex is not '' and len(exchange) > 0 and equity['exchange'].lower() == ex.lower():
-                    run = True
+
+            if exchange is not None:
+                for ex in exchange:
+                    if ex is not '' and len(exchange) > 0 and equity['exchange'].lower() == ex.lower():
+                        run = True
+            else:
+                run = True
 
             if run:
                 buffer = {}
@@ -91,7 +101,10 @@ def fetch_args():
 
 if __name__ == "__main__":
     arguments = fetch_args()
-    exchanges = arguments.exchange.split(",")
+
+    exchanges = None
+    if arguments.exchange is not None:
+        exchanges = arguments.exchange.split(",")
 
     data = fetch_stocks(exchange = exchanges, caps = arguments.caps)
     if arguments.write:

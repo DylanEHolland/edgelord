@@ -83,7 +83,7 @@ class security_data:
         return self.build(data)
 
 
-    def from_json(self, file):
+    def from_json(self, file, use_pandas = True):
         """Build a security_data object from the given JSON file"""
 
         with open(file, 'r') as f:
@@ -101,7 +101,7 @@ class security_data:
         self.cache_filename = "%s/%s.json" % (self.cache_directory, ticker)
         if os.path.exists(self.cache_filename):
             buffer = self.from_json(self.cache_filename)
-            print("Loading from cache")
+            #print("Loading from cache")
         else:
             client = TiingoClient()
             data = client.get_ticker_price(ticker, startDate=last_business_day(days), endDate=last_business_day())
