@@ -140,7 +140,9 @@ class security_data:
             data = pandas.DataFrame(result, columns=column_list)
             data = data.sort_values(by=['date'])
 
-            data.to_json("%s/%s.json" % (self.cache_directory, ticker))
+            if 'EDGELORD_CACHE_DIR' in os.environ:
+                data.to_json("%s/%s.json" % (self.cache_directory, ticker))
+            
             buffer = self.build(data)
 
         return buffer

@@ -109,7 +109,7 @@ class security:
         """Build a security object from a CSV file"""
 
         self.data = security_data.security_data(self, False).from_json(file, use_pandas=use_pandas)
-        print(self.data.data[0][0])
+        #print(self.data.data[0][0])
         return self
 
     def from_rest(self, ticker = None, days = 262):

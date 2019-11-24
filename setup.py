@@ -3,7 +3,7 @@ from distutils.core import setup
 setup(
     name = 'edgelord',
     packages = ['edgelord'],
-    version = '0.2',  # Ideally should be same as your GitHub release tag varsion
+    version = '0.3',  # Ideally should be same as your GitHub release tag varsion
     description = 'A module for non-voodo equity analysis',
     author = 'Dylan E. Holland',
     author_email = 'salinson1138@gmail.com',
